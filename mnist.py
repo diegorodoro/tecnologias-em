@@ -13,23 +13,33 @@ n=3
 # plt.xlabel(y_train[n])
 # plt.show()
 
+#normalizar datos
 x_train,x_test=x_train/255,x_test/255
 
+#modelo
 model = tf.keras.models.Sequential([
+    # de matriz, a un vector
     tf.keras.layers.Flatten(input_shape=(28,28)),
+    # capa oculta
     tf.keras.layers.Dense(128,activation='relu'),
+    # elimina neuronas que no se activan
     tf.keras.layers.Dropout(0.2),
+    # capa de salida
     tf.keras.layers.Dense(10,activation='softmax')
 ])
 
+# compilas
 model.compile(optimizer='adam', 
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
 
 print("Entrenando modelo...")
+# recuperas historial de perdidas por epoca
 model_history=model.fit(x_train,y_train,epochs=5,validation_data=(x_test,y_test))
 
+# despues de epocas, se evalua presicion
 print(model.evaluate(x_test,y_test))
+
 
 plt.plot(model_history.history['loss'])
 plt.plot(model_history.history['val_loss'])
